@@ -1,0 +1,30 @@
+{
+  "users": [
+    {
+      "name": "a",
+      "email": "smoreiralves@gmail.com",
+      "password": "1234",
+      "progress": 0,
+      "id": "HiGTZorrv-Q"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "1",
+      "type": "completar",
+      "question": "C _ _ A",
+      "answer": "CASA"
+    },
+    {
+      "id": "2",
+      "type": "escolher",
+      "question": "Qual está correta?",
+      "options": [
+        "BOLA",
+        "BLAO"
+      ],
+      "answer": "BOLA"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

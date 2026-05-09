@@ -1,26 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dyslexia App</title>
+    <link rel="stylesheet" href="css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>Prototipo</title>
 </head>
-<body>
-    <nav class="navbar navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">QuestFocus</a>
-            <div>
-                <a href="login.html" class="btn btn-outline-light">Login</a>
-                <a href="register.html" class="btn btn-outline-light">Register</a>
-            </div>
+
+<body class="container mt-4">
+
+    <!-- NAVBAR -->
+    <nav class="navbar bg-white p-3 mb-4">
+        <h4>🧠 DyslexiaApp</h4>
+        <div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#registerModal">Registar</button>
         </div>
     </nav>
-    <div class="container mt-5">
-        <h1>Bem-vindo ao QuestFocus</h1>
-        <p>Uma applicacao para ajudar jovens com PHDA a melhorar sua qualidade o foco e produtividade atraves de desafios e gamificacao.</p>
-        
-        <a href="login.html" class="btn btn-primary">Comece Agora</a>
+
+    <!-- HERO -->
+    <div class="hero mb-4">
+        <h1>Aprender a ler pode ser um jogo</h1>
+        <p>
+            Ajuda jovens com dislexia a melhorar a leitura com exercícios simples,
+            interativos e gamificados.
+        </p>
     </div>
+
+    <!-- FEATURES -->
+    <div class="row text-center">
+
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h5>Exercícios</h5>
+                <p>Completa palavras e quizzes</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h5>Progresso</h5>
+                <p>Acompanha evolução</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h5>Gamificação</h5>
+                <p>Ganha pontos e níveis</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- LOGIN MODAL -->
+    <div class="modal fade" id="loginModal">
+        <div class="modal-dialog">
+            <div class="modal-content p-4">
+
+                <h3>Login</h3>
+
+                <input id="loginEmail" class="form-control mb-2" placeholder="Email">
+                <input id="loginPassword" type="password" class="form-control mb-3" placeholder="Password">
+
+                <button onclick="login()" class="btn btn-primary w-100">Entrar</button>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- REGISTER MODAL -->
+    <div class="modal fade" id="registerModal">
+        <div class="modal-dialog">
+            <div class="modal-content p-4">
+
+                <h3>Criar Conta</h3>
+
+                <input id="regName" class="form-control mb-2" placeholder="Nome">
+                <input id="regEmail" class="form-control mb-2" placeholder="Email">
+                <input id="regPassword" type="password" class="form-control mb-3" placeholder="Password">
+
+                <button onclick="register()" class="btn btn-success w-100">Registar</button>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/controllers/authController.js"></script>
+
 </body>
+
 </html>

@@ -1,44 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <div class="container mt-4">
-        <h2>Dashboard</h2>
-        <p>Bem-vindo, <span id="username"></span>!</p>
-    
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card p-3">
-                    <h5>Nivel</h5>
-                    <p>2</p>
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="card p-3">
-                    <h5>XP</h5>
-                    <p>1500</p>
-                </div>
-            </div>
 
-            <div class="col-md-4">
-                <div class="card p-3">
-                    <h5>Streak</h5>
-                    <p>3 dias</p>
-                </div>
+<body class="container mt-4">
+
+    <!-- NAVBAR -->
+    <nav class="navbar bg-white p-3 mb-4">
+        <h4>Dashboard</h4>
+        <div>
+            <a href="dashboard.html" class="btn btn-outline-primary">Home</a>
+            <a href="exercise.html" class="btn btn-primary">Exercícios</a>
+            <button onclick="logout()" class="btn btn-danger">Logout</button>
+        </div>
+    </nav>
+
+    <!-- USER INFO -->
+    <div class="card p-3 mb-4">
+        <h4 id="welcome"></h4>
+
+        <span id="level" class="badge bg-success badge-level"></span>
+
+        <div class="progress mt-3">
+            <div id="progressBar" class="progress-bar bg-success"></div>
+        </div>
+
+        <p class="mt-2" id="points"></p>
+    </div>
+
+    <!-- GAMIFICAÇÃO -->
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="card p-3 text-center">
+                <h5>🏆 Pontos</h5>
+                <h2 id="score"></h2>
             </div>
         </div>
 
-        <a href="activities.html" class="btn btn-primary my-3">Atividades</a>
-        <a href="progress.html" class="btn btn-info mt-3">Progresso</a>
-        <a href="profile.html" class="btn btn-secondary mt-3">Perfil</a>
-        <button onclick="logout()" class="btn btn-danger mt-3">Logout</button>
+        <div class="col-md-4">
+            <div class="card p-3 text-center">
+                <h5>🔥 Sequência</h5>
+                <h2 id="streak">0 dias</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-3 text-center">
+                <h5>⭐ Favoritos</h5>
+                <h2>
+                    <span id="favoritesCount"></span>
+                </h2>
+            </div>
+        </div>
+
     </div>
 
-    <script src="js/app.js"></script>
+    <!-- AÇÕES -->
+    <div class="card mt-4 p-3">
+        <h5>Escolhe um exercício</h5>
+
+        <div class="row mt-3">
+
+            <div class="col-md-4">
+                <div class="card exercise-card p-3 text-center" onclick="goExercise('a')">
+                    <p>Texto Embaralhado</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card exercise-card p-3 text-center" onclick="goExercise('b')">
+                    <p>Texto Desfocado</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card exercise-card p-3 text-center" onclick="goExercise('c')">
+                    <p>Tarefas Desordenadas</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/controllers/userController.js"></script>
+
 </body>
+
 </html>
