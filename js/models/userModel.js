@@ -1,21 +1,26 @@
-let user = JSON.parse(localStorage.getItem("user"));
+function createUser(name, email, password, isAdmin = false) {
+  return {
+    name,
+    email,
+    password,
 
-if (!user) {
-  window.location.href = "login.html";
-}
+    isAdmin,
 
-document.getElementById("welcome").innerText = "Olá, " + user.name + " 👋";
+    points: 0,
+    level: 1,
 
-let level = Math.floor(user.progress / 20) + 1;
-let points = user.progress * 10;
+    progress: {
+      a: 0,
+      b: 0,
+      c: 0
+    },
 
-document.getElementById("level").innerText = "Nível " + level;
-document.getElementById("progressBar").style.width = user.progress + "%";
-document.getElementById("points").innerText = user.progress + "% completo";
+    skillLevel: {
+      a: 1,
+      b: 1,
+      c: 1
+    },
 
-document.getElementById("score").innerText = points + " pts";
-
-function logout() {
-  localStorage.removeItem("user");
-  window.location.href = "index.html";
+    history: []
+  };
 }

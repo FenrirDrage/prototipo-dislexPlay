@@ -25,11 +25,24 @@
 
         <span id="level" class="badge bg-success badge-level"></span>
 
-        <div class="progress mt-3">
-            <div id="progressBar" class="progress-bar bg-success"></div>
+        <p>A - Texto Embaralhado</p>
+        <div class="progress mb-2">
+            <div id="progA" class="progress-bar bg-success"></div>
         </div>
 
-        <p class="mt-2" id="points"></p>
+        <p>B - Texto Desfocado</p>
+        <div class="progress mb-2">
+            <div id="progB" class="progress-bar bg-warning"></div>
+        </div>
+
+        <p>C - Tarefas Desordenadas</p>
+        <div class="progress mb-2">
+            <div id="progC" class="progress-bar bg-info"></div>
+        </div>
+
+        <div class="card p-3 d-flex justify-content-center align-items-center" style="height:100px;">
+            <h5 id="recommendation" class="text-center"></h5>
+        </div>
     </div>
 
     <!-- GAMIFICAÇÃO -->
@@ -37,21 +50,21 @@
 
         <div class="col-md-4">
             <div class="card p-3 text-center">
-                <h5>🏆 Pontos</h5>
-                <h2 id="score"></h2>
+                <h5>Pontos</h5>
+                <h2 id="points"></h2>
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="card p-3 text-center">
-                <h5>🔥 Sequência</h5>
+                <h5>Sequência</h5>
                 <h2 id="streak">0 dias</h2>
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="card p-3 text-center">
-                <h5>⭐ Favoritos</h5>
+                <h5>Favoritos</h5>
                 <h2>
                     <span id="favoritesCount"></span>
                 </h2>
@@ -66,21 +79,26 @@
 
         <div class="row mt-3">
 
-            <div class="col-md-4">
+            <div class="col-md-6 mb-3">
                 <div class="card exercise-card p-3 text-center" onclick="goExercise('a')">
-                    <p>Texto Embaralhado</p>
+                    <p>Completar palavras</p>
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-6 mb-3">
                 <div class="card exercise-card p-3 text-center" onclick="goExercise('b')">
-                    <p>Texto Desfocado</p>
+                    <p>Associar imagem</p>
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-6 mb-3">
                 <div class="card exercise-card p-3 text-center" onclick="goExercise('c')">
-                    <p>Tarefas Desordenadas</p>
+                    <p>Quizz</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="card exercise-card p-3 text-center" onclick="goExercise('d')">
+                    <p>Sopa de letra</p>
                 </div>
             </div>
 

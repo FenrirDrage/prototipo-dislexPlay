@@ -2,20 +2,20 @@ const API = "http://localhost:3000/users";
 
 // REGISTO
 async function register() {
-  const user = {
-    name: document.getElementById("regName").value,
-    email: document.getElementById("regEmail").value,
-    password: document.getElementById("regPassword").value,
-    progress: 0
-  };
 
-  await fetch(API, {
+  const name = document.getElementById("regName").value;
+  const email = document.getElementById("regEmail").value;
+  const password = document.getElementById("regPassword").value;
+
+  const user = createUser(name, email, password);
+
+  await fetch("http://localhost:3000/users", {
     method: "POST",
     body: JSON.stringify(user),
     headers: { "Content-Type": "application/json" }
   });
 
-  alert("Conta criada! 🎉");
+  alert("Conta criada!");
 
   // fechar modal
   const modal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
@@ -30,8 +30,19 @@ async function login() {
   const data = await res.json();
 
   if (data.length > 0) {
-    localStorage.setItem("user", JSON.stringify(data[0]));
-    window.location.href = "dashboard.html";
+
+    const user = data[0]; // 🔥 importante
+
+    // guardar user
+    localStorage.setItem("user", JSON.stringify(user));
+
+    // 👑 verificar admin
+    if (user.isAdmin) {
+      window.location.href = "admin.html";
+    } else {
+      window.location.href = "dashboard.html";
+    }
+
   } else {
     alert("Utilizador não encontrado ❌");
   }

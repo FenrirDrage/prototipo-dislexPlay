@@ -1,29 +1,83 @@
 {
   "users": [
     {
-      "name": "a",
+      "id": "999",
+      "name": "Admin",
+      "email": "admin@admin.com",
+      "password": "admin",
+      "isAdmin": true,
+      "points": 0,
+      "level": 1,
+      "progress": {
+        "a": 0,
+        "b": 0,
+        "c": 0
+      },
+      "skillLevel": {
+        "a": 1,
+        "b": 1,
+        "c": 1
+      },
+      "history": []
+    },
+    {
+      "name": "Sérgio",
       "email": "smoreiralves@gmail.com",
       "password": "1234",
-      "progress": 0,
-      "id": "HiGTZorrv-Q"
+      "points": 10,
+      "level": 1,
+      "progress": {
+        "a": 10,
+        "b": 0,
+        "c": 0
+      },
+      "skillLevel": {
+        "a": 1,
+        "b": 1,
+        "c": 1
+      },
+      "history": [
+        {
+          "type": "a",
+          "date": "2026-05-19T18:39:23.919Z",
+          "result": "success"
+        }
+      ],
+      "id": "ny_G3niXoy4"
     }
   ],
   "exercises": [
     {
-      "id": "1",
-      "type": "completar",
-      "question": "C _ _ A",
-      "answer": "CASA"
+      "type": "complete"
     },
     {
-      "id": "2",
-      "type": "escolher",
-      "question": "Qual está correta?",
-      "options": [
-        "BOLA",
-        "BLAO"
-      ],
-      "answer": "BOLA"
+      "type": "quiz"
+    },
+    {
+      "type": "image"
+    },
+    {
+      "type": "sopa"
+    }
+  ],
+  "words": [
+    {
+      "id": 1,
+      "word": "CASA",
+      "difficulty": "easy",
+      "image": "casa.png"
+    },
+    {
+      "id": 2,
+      "word": "BOLA",
+      "difficulty": "easy",
+      "image": "bola.png"
+    },
+    {
+      "id": 3,
+      "word": "ELEFANTE",
+      "difficulty": "medium",
+      "image": "elefante.png"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

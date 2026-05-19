@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Admin</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="container mt-4">
+
+    <!-- NAVBAR -->
+    <nav class="navbar bg-white p-3 mb-4">
+        <h4> Admin Dashboard</h4>
+        <div>
+            <a href="admin.html" class="btn btn-outline-primary">Home</a>
+            <button onclick="logout()" class="btn btn-danger">Logout</button>
+        </div>
+    </nav>
+
+    <!-- MENU ADMIN -->
+    <div class="row mb-4">
+
+        <div class="col-md-4">
+            <div class="card p-4 text-center exercise-card" onclick="showSection('users')">
+                Utilizadores
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-4 text-center exercise-card" onclick="showSection('exercises')">
+                Exercícios
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-4 text-center exercise-card" onclick="showSection('stats')">
+                Estatísticas
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CONTEÚDO DINÂMICO -->
+    <div id="adminContent"></div>
+
+    <script src="js/controllers/adminController.js"></script>
+
+</body>
+
+</html>
