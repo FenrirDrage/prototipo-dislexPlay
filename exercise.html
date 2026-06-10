@@ -18,22 +18,12 @@
     <div class="row">
 
         <!-- EXERCÍCIO -->
-        <div class="col-md-6">
-            <div class="card p-3">
+        <div class="mt-3">
+            <input type="text" id="answerInput" class="form-control" placeholder="Escreve a palavra">
 
-                <h3 id="question"></h3>
-
-                <!-- INPUT -->
-                <input id="answerInput" class="form-control mb-2 d-none">
-
-                <!-- OPÇÕES -->
-                <div id="optionsContainer" class="d-none"></div>
-
-                <button onclick="checkAnswer()" class="btn btn-primary mt-2">
-                    Responder
-                </button>
-
-            </div>
+            <button id="checkBtn" class="btn btn-primary mt-2">
+                Responder
+            </button>
         </div>
 
         <!-- CANVAS (para sopa de letras depois) -->
@@ -44,7 +34,7 @@
     </div>
 
     <script src="js/canvasExercises.js"></script>
-    <script src="js/controllers/exerciseController.js"></script>
+    <script type="module" src="js/controllers/exerciseController.js"></script>
 
 </body>
 

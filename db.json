@@ -65,19 +65,19 @@
       "id": 1,
       "word": "CASA",
       "difficulty": "easy",
-      "image": "casa.png"
+      "image": "/casa.png"
     },
     {
       "id": 2,
       "word": "BOLA",
       "difficulty": "easy",
-      "image": "bola.png"
+      "image": "/bola.jpg"
     },
     {
       "id": 3,
       "word": "ELEFANTE",
       "difficulty": "medium",
-      "image": "elefante.png"
+      "image": "/elefante.jpg"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
