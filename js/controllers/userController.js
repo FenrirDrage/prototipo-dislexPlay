@@ -12,26 +12,26 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("welcome").innerText = "Olá " + user.name;
 
   // pontos & nivel
-  document.getElementById("points").innerText = user.points + " pontos";
+  document.getElementById("points").innerText = user.points + "XP";
   //document.getElementById("level").innerText = "Nível " + user.level;
 
   // progresso por tipo
   const progA = document.getElementById("progA");
   if (progA) {
-    progA.style.width = user.progress.a + "%";
-    progA.innerText = user.progress.a + "%";
+    progA.style.width = user.progress.a + " XP";
+    progA.innerText = user.progress.a + " XP";
   }
 
   const progB = document.getElementById("progB");
   if (progB) {
-    progB.style.width = user.progress.b + "%";
-    progB.innerText = user.progress.b + "%";
+    progB.style.width = user.progress.b + " XP";
+    progB.innerText = user.progress.b + " XP";
   }
 
   const progC = document.getElementById("progC");
   if (progC) {
-    progC.style.width = user.progress.c + "%";
-    progC.innerText = user.progress.c + "%";
+    progC.style.width = user.progress.c + " XP";
+    progC.innerText = user.progress.c + " XP";
   }
 
   //recomendação
@@ -48,7 +48,12 @@ document.addEventListener("DOMContentLoaded", () => {
     minValue = user.progress.c;
   }
 
-  const names = { a: "Tipo A", b: "Tipo B", c: "Tipo C" };
+  if (user.progress.d < minValue) {
+    minType = "d";
+    minValue = user.progress.d;
+  }
+
+  const names = { a: "Tipo A - Complementar Palavras", b: "Tipo B - Associar Imagem", c: "Tipo C - Quizz", d: "Tipo D - Sopa de Letras" };
   document.getElementById("recommendation").innerText =
     "Devias treinar: " + names[minType];
 

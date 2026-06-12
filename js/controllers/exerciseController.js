@@ -8,7 +8,18 @@ const name = document.getElementById("exerciseName");
 const desc = document.getElementById("exerciseDesc");
 const canvas = document.getElementById("canvas");
 
+// palavra atual para validação
 let currentWord = null;
+
+// contador de tentativas para limitar erros
+let attempts = 0;
+
+ // calcular
+  function calculatePoints(attempts) {
+  if (attempts === 1) return 10;
+  if (attempts === 2) return 5;
+  return 1;
+  }
 
 // garantir que estamos na página certa
 if (!canvas) {
@@ -28,6 +39,7 @@ async function init() {
 
   const random = words[Math.floor(Math.random() * words.length)];
   currentWord = random;
+  toggleInputUI(type);
 
   switch (type) {
     case "a":
@@ -46,8 +58,37 @@ async function init() {
       break;
 
     case "d":
-      drawPlaceholder("Sopa de letras em construção");
+      setupImageUI();
+
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      const selectedWords = getWordsForGame(words, user.skillLevel.d);
+
+      const grid = createGrid(10);
+
+      placeWords(grid, selectedWords);
+      fillGrid(grid);
+      drawGrid(grid);
+      setupGridClick(grid);
       break;
+  }
+}
+
+// mostrar ou esconder input e botão dependendo do tipo de exercício
+function toggleInputUI(type) {
+  const input = document.getElementById("answerInput");
+  const btn = document.getElementById("checkBtn");
+
+  if (!input || !btn) return;
+
+  if (type === "a") {
+    // mostrar
+    input.style.display = "block";
+    btn.style.display = "block";
+  } else {
+    // esconder
+    input.style.display = "none";
+    btn.style.display = "none";
   }
 }
 
@@ -185,19 +226,31 @@ function drawPlaceholder(text) {
 // EVENTOS
 //
 
-// validar resposta do input
 function setupInputValidation(correctWord) {
-  document.getElementById("checkBtn")
-    .addEventListener("click", () => {
 
-      const input = document.getElementById("answerInput").value;
+  const btn = document.getElementById("checkBtn"); 
 
-      if (input.toLowerCase() === correctWord.toLowerCase()) {
-        alert("Acertaste!");
-      } else {
-        alert("Errado");
-      }
-    });
+  btn.onclick = () => {
+
+    const input = document.getElementById("answerInput").value;
+
+    attempts++; 
+
+    if (input.toLowerCase() === correctWord.toLowerCase()) {
+
+      let points = calculatePoints(attempts);
+
+      alert("Acertaste! +" + points + " XP");
+
+      handleResult(true, points);
+
+      btn.disabled = true; 
+
+    } else {
+
+      alert("Errado tenta outra vez");
+    }
+  };
 }
 
 // validar clique nas opções do jogo de associação
@@ -223,8 +276,10 @@ function setupCanvasClick(options, correctWord) {
       ) {
         if (opt === correctWord) {
           alert("Acertaste!");
+          handleResult(true);
         } else {
           alert("Errado");
+          handleResult(false);
         }
       }
     });
@@ -233,10 +288,9 @@ function setupCanvasClick(options, correctWord) {
 }
 
 // lidar com resultado do exercício (correto ou errado)
-async function handleResult(isCorrect) {
+async function handleResult(isCorrect, earnedPoints = 0) {
 
   let user = JSON.parse(localStorage.getItem("user"));
-
   if (!user) return;
 
   // garantir estruturas
@@ -244,22 +298,25 @@ async function handleResult(isCorrect) {
   if (!user.skillLevel) user.skillLevel = { a: 1, b: 1, c: 1, d: 1 };
   if (!user.history) user.history = [];
 
+  if (!user.progress[type]) user.progress[type] = 0;
+
   if (isCorrect) {
-    user.points += 10;
 
-    user.progress[type] += 20;
+    user.points += earnedPoints; 
 
-    // subir nível
+    user.progress[type] += earnedPoints;
+
     if (user.progress[type] >= 100) {
       user.progress[type] = 0;
       user.skillLevel[type] += 1;
 
-      alert("Subiste de nível! 🚀");
+      alert("Subiste de nível!");
     }
 
     user.history.push({
       type: type,
       result: "success",
+      points: earnedPoints,
       date: new Date().toISOString()
     });
 
@@ -268,21 +325,147 @@ async function handleResult(isCorrect) {
     user.history.push({
       type: type,
       result: "fail",
+      points: 0,
       date: new Date().toISOString()
     });
 
   }
 
-  // nível global
   user.level = Math.floor(user.points / 50) + 1;
 
-  // guardar local
   localStorage.setItem("user", JSON.stringify(user));
 
-  // atualizar JSON Server
   await fetch(`http://localhost:3000/users/${user.id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(user)
   });
+}
+
+//
+//Sopa de letras
+//
+
+function getWordsForGame(words, userLevel) {
+
+  let difficulty = "easy";
+
+  if (userLevel >= 3) difficulty = "medium";
+  if (userLevel >= 5) difficulty = "hard";
+
+  const filtered = words.filter(w => w.difficulty === difficulty);
+
+  const count = (difficulty === "easy") ? 3 : 4;
+
+  return filtered
+    .sort(() => Math.random() - 0.5)
+    .slice(0, count);
+}
+
+function createGrid(size = 10) {
+  return Array.from({ length: size }, () =>
+    Array(size).fill("")
+  );
+}
+
+function placeWords(grid, words) {
+
+  words.forEach(wordObj => {
+    const word = wordObj.word;
+
+    let placed = false;
+
+    while (!placed) {
+
+      const row = Math.floor(Math.random() * grid.length);
+      const col = Math.floor(Math.random() * (grid.length - word.length));
+
+      let fits = true;
+
+      for (let i = 0; i < word.length; i++) {
+        if (grid[row][col + i] !== "") {
+          fits = false;
+          break;
+        }
+      }
+
+      if (fits) {
+        for (let i = 0; i < word.length; i++) {
+          grid[row][col + i] = word[i];
+        }
+        placed = true;
+      }
+    }
+  });
+}
+
+function fillGrid(grid) {
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+  for (let i = 0; i < grid.length; i++) {
+    for (let j = 0; j < grid.length; j++) {
+      if (grid[i][j] === "") {
+        grid[i][j] = letters[Math.floor(Math.random() * letters.length)];
+      }
+    }
+  }
+}
+
+function drawGrid(grid) {
+
+  const ctx = canvas.getContext("2d");
+
+  const cellSize = 40;
+
+  canvas.width = grid.length * cellSize;
+  canvas.height = grid.length * cellSize;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.font = "20px Arial";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  for (let i = 0; i < grid.length; i++) {
+    for (let j = 0; j < grid.length; j++) {
+
+      const x = j * cellSize;
+      const y = i * cellSize;
+
+      ctx.strokeRect(x, y, cellSize, cellSize);
+      ctx.fillText(grid[i][j], x + cellSize/2, y + cellSize/2);
+    }
+  }
+}
+
+let selectedLetters = [];
+
+function setupGridClick(grid) {
+
+  canvas.onclick = (e) => {
+
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const cellSize = 40;
+
+    const col = Math.floor(x / cellSize);
+    const row = Math.floor(y / cellSize);
+
+    const letter = grid[row][col];
+
+    selectedLetters.push(letter);
+
+    console.log("Selecionado:", selectedLetters.join(""));
+  };
+}
+
+function checkWord(selected, words) {
+
+  const formed = selected.join("");
+
+  const valid = words.some(w => w.word === formed);
+
+  return valid;
 }

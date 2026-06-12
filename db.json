@@ -24,11 +24,11 @@
       "name": "Sérgio",
       "email": "smoreiralves@gmail.com",
       "password": "1234",
-      "points": 10,
-      "level": 1,
+      "points": 75,
+      "level": 2,
       "progress": {
-        "a": 10,
-        "b": 0,
+        "a": 15,
+        "b": 40,
         "c": 0
       },
       "skillLevel": {
@@ -41,6 +41,42 @@
           "type": "a",
           "date": "2026-05-19T18:39:23.919Z",
           "result": "success"
+        },
+        {
+          "type": "a",
+          "result": "success",
+          "points": 5,
+          "date": "2026-06-12T11:57:53.408Z"
+        },
+        {
+          "type": "b",
+          "result": "success",
+          "points": 0,
+          "date": "2026-06-12T12:54:40.367Z"
+        },
+        {
+          "type": "a",
+          "result": "success",
+          "points": 5,
+          "date": "2026-06-12T12:54:53.634Z"
+        },
+        {
+          "type": "a",
+          "result": "success",
+          "points": 5,
+          "date": "2026-06-12T12:57:43.681Z"
+        },
+        {
+          "type": "a",
+          "result": "success",
+          "points": 5,
+          "date": "2026-06-12T13:00:13.791Z"
+        },
+        {
+          "type": "a",
+          "result": "success",
+          "points": 5,
+          "date": "2026-06-12T13:01:47.646Z"
         }
       ],
       "id": "ny_G3niXoy4"
@@ -48,33 +84,37 @@
   ],
   "exercises": [
     {
-      "type": "complete"
+      "type": "complete",
+      "id": "H9rWh9yLNWk"
     },
     {
-      "type": "quiz"
+      "type": "quiz",
+      "id": "8CS5gHwqsfM"
     },
     {
-      "type": "image"
+      "type": "image",
+      "id": "HKEMK5MTol8"
     },
     {
-      "type": "sopa"
+      "type": "sopa",
+      "id": "ZuSleNu-LBQ"
     }
   ],
   "words": [
     {
-      "id": 1,
+      "id": "1",
       "word": "CASA",
       "difficulty": "easy",
       "image": "/casa.png"
     },
     {
-      "id": 2,
+      "id": "2",
       "word": "BOLA",
       "difficulty": "easy",
       "image": "/bola.jpg"
     },
     {
-      "id": 3,
+      "id": "3",
       "word": "ELEFANTE",
       "difficulty": "medium",
       "image": "/elefante.jpg"
