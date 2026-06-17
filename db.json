@@ -24,12 +24,13 @@
       "name": "Sérgio",
       "email": "smoreiralves@gmail.com",
       "password": "1234",
-      "points": 75,
+      "points": 93,
       "level": 2,
       "progress": {
-        "a": 15,
+        "a": 25,
         "b": 40,
-        "c": 0
+        "c": 0,
+        "d": 8
       },
       "skillLevel": {
         "a": 1,
@@ -77,6 +78,18 @@
           "result": "success",
           "points": 5,
           "date": "2026-06-12T13:01:47.646Z"
+        },
+        {
+          "type": "d",
+          "result": "success",
+          "points": 8,
+          "date": "2026-06-17T09:27:22.780Z"
+        },
+        {
+          "type": "a",
+          "result": "success",
+          "points": 10,
+          "date": "2026-06-17T10:48:59.168Z"
         }
       ],
       "id": "ny_G3niXoy4"
@@ -84,20 +97,47 @@
   ],
   "exercises": [
     {
+      "id": "H9rWh9yLNWk",
       "type": "complete",
-      "id": "H9rWh9yLNWk"
+      "title": "Completar Palavras Fácil",
+      "difficulty": "easy",
+      "wordIds": [
+        "1",
+        "2"
+      ]
     },
     {
+      "id": "8CS5gHwqsfM",
       "type": "quiz",
-      "id": "8CS5gHwqsfM"
+      "title": "Quiz de Palavras",
+      "difficulty": "medium",
+      "wordIds": [
+        "1",
+        "2",
+        "3"
+      ]
     },
     {
+      "id": "HKEMK5MTol8",
       "type": "image",
-      "id": "HKEMK5MTol8"
+      "title": "Associar Imagem",
+      "difficulty": "easy",
+      "wordIds": [
+        "1",
+        "2"
+      ]
     },
     {
+      "id": "ZuSleNu-LBQ",
       "type": "sopa",
-      "id": "ZuSleNu-LBQ"
+      "title": "Sopa de Letras Animais",
+      "difficulty": "medium",
+      "size": 10,
+      "wordIds": [
+        "1",
+        "2",
+        "3"
+      ]
     }
   ],
   "words": [
@@ -105,19 +145,19 @@
       "id": "1",
       "word": "CASA",
       "difficulty": "easy",
-      "image": "/casa.png"
+      "image": "/images/casa.png"
     },
     {
       "id": "2",
       "word": "BOLA",
       "difficulty": "easy",
-      "image": "/bola.jpg"
+      "image": "/images/bola.jpg"
     },
     {
       "id": "3",
       "word": "ELEFANTE",
       "difficulty": "medium",
-      "image": "/elefante.jpg"
+      "image": "/images/elefante.jpg"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

@@ -34,10 +34,15 @@ body {
 }
 
 .exercise-card {
-    cursor: pointer;
-    transition: 0.3s;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  transition: 0.2s;
+  cursor: pointer;
 }
 
 .exercise-card:hover {
-    transform: scale(1.05);
+  transform: scale(1.03);
 }

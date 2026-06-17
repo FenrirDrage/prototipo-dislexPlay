@@ -69,7 +69,7 @@ async function init() {
       placeWords(grid, selectedWords);
       fillGrid(grid);
       drawGrid(grid);
-      setupGridClick(grid);
+      setupGridClick(grid, selectedWords);
       break;
   }
 }
@@ -145,8 +145,8 @@ function startImageMatchGame(correct, words) {
     options[Math.floor(Math.random() * options.length)] = correct.word;
   }
 
-  drawMatchGame(correct.image, options);
-  setupCanvasClick(options, correct.word);
+  drawMatchGame(correct.image, options, correct.word);
+  //setupCanvasClick(options, correct.word);
 }
 
 //
@@ -156,8 +156,11 @@ function startImageMatchGame(correct, words) {
 // ajustar tamanho do canvas para evitar distorção
 function fixCanvasSize() {
   const rect = canvas.getBoundingClientRect();
-  canvas.width = rect.width;
-  canvas.height = rect.height;
+
+  const size = Math.min(rect.width, rect.height); // força quadrado
+
+  canvas.width = size;
+  canvas.height = size;
 }
 
 // desenhar palavra mascarada
@@ -176,11 +179,11 @@ function drawWord(text) {
 }
 
 // desenhar jogo de associação imagem-palavra
-function drawMatchGame(imageName, options) {
+function drawMatchGame(imageName, options, correctWord) {
   const ctx = canvas.getContext("2d");
 
   const img = new Image();
-  img.src = "images/" + imageName;
+  img.src = imageName;
 
   img.onload = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -204,6 +207,8 @@ function drawMatchGame(imageName, options) {
       ctx.textAlign = "center";
       ctx.fillText(opt, x + 50, y + 20);
     });
+
+    setupCanvasClick(options, correctWord);
   };
 }
 
@@ -346,6 +351,9 @@ async function handleResult(isCorrect, earnedPoints = 0) {
 //Sopa de letras
 //
 
+let foundWords = [];
+let stotalPoints = 0;
+
 function getWordsForGame(words, userLevel) {
 
   let difficulty = "easy";
@@ -413,12 +421,12 @@ function fillGrid(grid) {
 
 function drawGrid(grid) {
 
+  fixCanvasSize();
+
   const ctx = canvas.getContext("2d");
 
-  const cellSize = 40;
-
-  canvas.width = grid.length * cellSize;
-  canvas.height = grid.length * cellSize;
+  const size = grid.length;
+  const cellSize = canvas.width / size;
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -426,8 +434,8 @@ function drawGrid(grid) {
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
 
-  for (let i = 0; i < grid.length; i++) {
-    for (let j = 0; j < grid.length; j++) {
+  for (let i = 0; i < size; i++) {
+    for (let j = 0; j < size; j++) {
 
       const x = j * cellSize;
       const y = i * cellSize;
@@ -438,34 +446,138 @@ function drawGrid(grid) {
   }
 }
 
-let selectedLetters = [];
+let selectedCells = [];
 
-function setupGridClick(grid) {
+function setupGridClick(grid, selectedWords) {
 
   canvas.onclick = (e) => {
 
     const rect = canvas.getBoundingClientRect();
+
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    const cellSize = 40;
+    const cellSize = canvas.width / grid.length;
 
     const col = Math.floor(x / cellSize);
     const row = Math.floor(y / cellSize);
 
-    const letter = grid[row][col];
+    console.log("Célula clicada:", row, col);
 
-    selectedLetters.push(letter);
+    // evitar repetir a mesma célula
+    const alreadySelected = selectedCells.some(
+      c => c.row === row && c.col === col
+    );
 
-    console.log("Selecionado:", selectedLetters.join(""));
+    if (!alreadySelected) {
+      selectedCells.push({ row, col });
+    }
+
+    const word = selectedCells
+      .map(c => grid[c.row][c.col])
+      .join("");
+
+    console.log("Selecionado:", word);
+
+    checkWord(selectedCells, grid, selectedWords);
   };
 }
 
-function checkWord(selected, words) {
+function checkWord(selectedCells, grid, selectedWords) {
 
-  const formed = selected.join("");
+  const formed = selectedCells
+    .map(c => grid[c.row][c.col])
+    .join("");
 
-  const valid = words.some(w => w.word === formed);
+  const found = selectedWords.find(w => formed.includes(w.word));
 
-  return valid;
+  if (found && !foundWords.includes(found.word)) {
+
+    // adicionar à lista
+    foundWords.push(found.word);
+
+    // pontos
+    let points = formed.length * 2;
+    stotalPoints += points;
+
+    // atualizar UI
+    addWordToList(found.word);
+
+    console.log("Encontrada:", found.word);
+
+    // limpar seleção (mas NÃO reset jogo)
+    selectedCells.length = 0;
+
+    // verificar se terminou
+    if (foundWords.length === selectedWords.length) {
+      finishGame();
+    }
+  }
+}
+
+function addWordToList(word) {
+
+  const list = document.getElementById("foundList");
+
+  const li = document.createElement("li");
+  li.textContent = word;
+
+  list.appendChild(li);
+}
+
+async function finishGame() {
+
+  let user = JSON.parse(localStorage.getItem("user"));
+  if (!user) return;
+
+  const type = "d"; // sopa de letras
+
+  // garantir estruturas
+  if (!user.progress) user.progress = { a: 0, b: 0, c: 0, d: 0 };
+  if (!user.skillLevel) user.skillLevel = { a: 1, b: 1, c: 1, d: 1 };
+  if (!user.history) user.history = [];
+
+  // adicionar pontos
+  user.points += totalPoints;
+
+  // progresso
+  user.progress[type] += 20;
+
+  // level up
+  if (user.progress[type] >= 100) {
+    user.progress[type] = 0;
+    user.skillLevel[type] += 1;
+
+    alert("Subiste de nível! 🚀");
+  }
+
+  // histórico
+  user.history.push({
+    type: type,
+    result: "success",
+    points: totalPoints,
+    date: new Date().toISOString()
+  });
+
+  // nível global
+  user.level = Math.floor(user.points / 50) + 1;
+
+  // guardar local
+  localStorage.setItem("user", JSON.stringify(user));
+
+  // 🌐 guardar no JSON Server
+  await fetch(`http://localhost:3000/users/${user.id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(user)
+  });
+
+  //feedback final
+  alert("Terminaste!\nPontos: " + totalPoints);
+
+
+  // opcional: redirecionar
+  // window.location.href = "dashboard.html";
 }
