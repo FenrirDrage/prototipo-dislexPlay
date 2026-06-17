@@ -15,35 +15,48 @@ Este projeto foi desenvolvido no âmbito académico com o objetivo de:
 
 ---
 
-## Funcionalidades
+## Tipos de Utilizador
 
-### Visitante
-
-* Visualizar informações sobre dislexia
-* Aceder a exemplos de exercícios
-* Criar conta / fazer login (via popup)
+### Visitante (não autenticado)
+- Visualizar informações sobre dislexia  
+- Aceder a exemplos de exercícios  
+- Criar conta / fazer login (via popup)
 
 ### Utilizador autenticado
+- Dashboard com progresso  
+- Sistema de pontos  
+- Acesso aos exercícios  
+- Persistência de dados  
 
-* Dashboard com progresso
-* Sistema de **gamificação (níveis e pontos)**
-* Exercícios interativos:
+### Admin
+- Gestão de conteúdos da aplicação  
+- Criação de exercícios/palavras  
+- Controlo de dados via interface administrativa  
 
-  * Texto embaralhado
-  * Texto desfocado
-  * Tarefas desordenadas
-* Navegação dinâmica entre exercícios
-* Persistência de dados
+---
+
+## Funcionalidades
+
+- Sistema de autenticação (login e registo)
+- Proteção de páginas (redirect se não autenticado)
+- Dashboard com progresso do utilizador
+- Sistema de gamificação (pontos)
+- Exercícios interativos
+- Navegação dinâmica entre exercícios
+- Área de administração
+- Persistência de dados com `localStorage`
+- Integração com `JSON Server` (Mock API)
 
 ---
 
 ## Exercícios
 
-A aplicação inclui diferentes tipos de exercícios que simulam dificuldades reais associadas à dislexia:
+A aplicação inclui exercícios interativos desenvolvidos com foco na leitura:
 
-* **Texto embaralhado** → simula leitura com palavras trocadas
-* **Texto desfocado** → simula dificuldades de foco visual
-* **Tarefas desordenadas** → trabalha memória e organização
+- **Sopa de letras**
+- **Completar palavras**
+- Exercícios com interação no **canvas**
+
 
 ---
 
@@ -68,6 +81,7 @@ dyslexia-app
 ├── index.html
 ├── dashboard.html
 ├── exercise.html
+├── admin.html
 │
 ├── css
 │   └── style.css
@@ -78,6 +92,7 @@ dyslexia-app
 │   │   ├── authController.js
 │   │   ├── userController.js
 │   │   └── exerciseController.js
+│   │   └── adminController.js
 │
 ├── db.json
 ```
@@ -89,7 +104,7 @@ dyslexia-app
 ### Clonar repositório
 
 ```bash
-git clone https://github.com/teu-username/dyslexia-app.git
+git clone https://github.com/FenrirDrage/dyslexia-app.git
 cd dyslexia-app
 ```
 
@@ -126,7 +141,7 @@ ou usar Live Server (recomendado no VS Code)
 ## Persistência
 
 * Dados do utilizador → `localStorage`
-* Dados iniciais (exercícios/users) → `JSON Server`
+* Dados iniciais → `JSON Server`
 
 ---
 
