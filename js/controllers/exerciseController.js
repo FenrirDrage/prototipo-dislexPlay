@@ -14,6 +14,9 @@ let currentWord = null;
 // contador de tentativas para limitar erros
 let attempts = 0;
 
+//verificar se o exercício já foi terminado
+let finished = false;
+
  // calcular
   function calculatePoints(attempts) {
   if (attempts === 1) return 10;
@@ -35,11 +38,19 @@ async function init() {
 
   fixCanvasSize();
 
+  stotalPoints = 0;
+  foundWords = [];
+  selectedCells = [];
   const words = await getWords();
-
   const random = words[Math.floor(Math.random() * words.length)];
   currentWord = random;
+
   toggleInputUI(type);
+
+  clearCanvasEvents(); 
+
+  const container = document.getElementById("wordsFound");
+  if (container) container.style.display = "none";
 
   switch (type) {
     case "a":
@@ -53,12 +64,15 @@ async function init() {
       break;
 
     case "c":
-      setupQuizUI();
+      //setupQuizUI();
       drawPlaceholder("Quiz em construção");
       break;
 
     case "d":
       setupImageUI();
+      
+      const container = document.getElementById("wordsFound");
+      if (container) container.style.display = "block";
 
       const user = JSON.parse(localStorage.getItem("user"));
 
@@ -72,6 +86,11 @@ async function init() {
       setupGridClick(grid, selectedWords);
       break;
   }
+}
+
+// limpar eventos antigos do canvas
+function clearCanvasEvents() {
+  canvas.onclick = null;
 }
 
 // mostrar ou esconder input e botão dependendo do tipo de exercício
@@ -188,17 +207,18 @@ function drawMatchGame(imageName, options, correctWord) {
   img.onload = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // fundo
     ctx.fillStyle = "#6c63ff";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // imagem
     ctx.drawImage(img, 100, 20, 150, 100);
 
-    // opções
     options.forEach((opt, i) => {
-      const x = 40 + i * 110;
-      const y = 150;
+      const cellWidth = canvas.width / options.length;
+      const boxWidth = cellWidth * 0.8;
+      const boxHeight = 40;
+
+      const x = i * cellWidth + (cellWidth - boxWidth) / 2;
+      const y = canvas.height * 0.7;
 
       ctx.fillStyle = "white";
       ctx.fillRect(x, y, 100, 30);
@@ -207,6 +227,7 @@ function drawMatchGame(imageName, options, correctWord) {
       ctx.textAlign = "center";
       ctx.fillText(opt, x + 50, y + 20);
     });
+    
 
     setupCanvasClick(options, correctWord);
   };
@@ -216,15 +237,18 @@ function drawMatchGame(imageName, options, correctWord) {
 function drawPlaceholder(text) {
   const ctx = canvas.getContext("2d");
 
+  fixCanvasSize();
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   ctx.fillStyle = "#6c63ff";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   ctx.fillStyle = "white";
-  ctx.font = "20px Arial";
+  ctx.font = "24px Arial";
+  ctx.textAlign = "center";
 
-  ctx.fillText(text, 20, 100);
+  ctx.fillText(text, canvas.width / 2, canvas.height / 2);
 }
 
 //
@@ -261,17 +285,23 @@ function setupInputValidation(correctWord) {
 // validar clique nas opções do jogo de associação
 function setupCanvasClick(options, correctWord) {
 
-  canvas.onclick = null; // limpa eventos antigos
-
-  canvas.addEventListener("click", (e) => {
+  canvas.onclick = (e) => {
 
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
 
     options.forEach((opt, i) => {
-      const boxX = 40 + i * 110;
-      const boxY = 150;
+      const cellWidth = canvas.width / options.length;
+      const boxWidth = cellWidth * 0.8;
+      const boxHeight = 40;
+
+      const boxX = i * cellWidth + (cellWidth - boxWidth) / 2;
+      const boxY = canvas.height * 0.7;
 
       if (
         x >= boxX &&
@@ -289,7 +319,7 @@ function setupCanvasClick(options, correctWord) {
       }
     });
 
-  });
+  };
 }
 
 // lidar com resultado do exercício (correto ou errado)
@@ -451,7 +481,7 @@ let selectedCells = [];
 function setupGridClick(grid, selectedWords) {
 
   canvas.onclick = (e) => {
-
+  
     const rect = canvas.getBoundingClientRect();
 
     const x = e.clientX - rect.left;
@@ -471,6 +501,14 @@ function setupGridClick(grid, selectedWords) {
 
     if (!alreadySelected) {
       selectedCells.push({ row, col });
+
+      // validar direção logo aqui
+      if (!isStraightLine(selectedCells)) {
+        console.log("Direção inválida, reset!");
+
+        selectedCells.length = 0; // limpa seleção
+        return;
+      }
     }
 
     const word = selectedCells
@@ -485,34 +523,63 @@ function setupGridClick(grid, selectedWords) {
 
 function checkWord(selectedCells, grid, selectedWords) {
 
+  const isValid = isStraightLine(selectedCells);
+  if (!isValid) return;
+
   const formed = selectedCells
     .map(c => grid[c.row][c.col])
     .join("");
 
-  const found = selectedWords.find(w => formed.includes(w.word));
+  console.log("Selecionado:", formed);
+
+  const found = selectedWords.find(w => formed === w.word);
 
   if (found && !foundWords.includes(found.word)) {
 
-    // adicionar à lista
     foundWords.push(found.word);
 
-    // pontos
     let points = formed.length * 2;
     stotalPoints += points;
 
-    // atualizar UI
     addWordToList(found.word);
 
     console.log("Encontrada:", found.word);
 
-    // limpar seleção (mas NÃO reset jogo)
     selectedCells.length = 0;
 
-    // verificar se terminou
     if (foundWords.length === selectedWords.length) {
       finishGame();
     }
   }
+}
+
+function isStraightLine(cells) {
+
+  if (cells.length < 2) return true;
+
+  const dx = cells[1].col - cells[0].col;
+  const dy = cells[1].row - cells[0].row;
+
+  for (let i = 1; i < cells.length; i++) {
+
+    const prev = cells[i - 1];
+    const curr = cells[i];
+
+    const currDx = curr.col - prev.col;
+    const currDy = curr.row - prev.row;
+
+    // tem de manter a mesma direção
+    if (currDx !== dx || currDy !== dy) {
+      return false;
+    }
+
+    // tem de ser célula ao lado (não pode saltar)
+    if (Math.abs(currDx) > 1 || Math.abs(currDy) > 1) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 function addWordToList(word) {
@@ -527,57 +594,74 @@ function addWordToList(word) {
 
 async function finishGame() {
 
+  finished = true;
+
   let user = JSON.parse(localStorage.getItem("user"));
   if (!user) return;
 
-  const type = "d"; // sopa de letras
+  const type = "d";
 
-  // garantir estruturas
   if (!user.progress) user.progress = { a: 0, b: 0, c: 0, d: 0 };
   if (!user.skillLevel) user.skillLevel = { a: 1, b: 1, c: 1, d: 1 };
   if (!user.history) user.history = [];
 
-  // adicionar pontos
-  user.points += totalPoints;
+  user.points += stotalPoints;
 
-  // progresso
-  user.progress[type] += 20;
+  user.progress[type] += stotalPoints;
+  console.log("Progresso atual:", user.progress[type]);
+  console.log("Pontos ganhos:", stotalPoints);
 
-  // level up
-  if (user.progress[type] >= 100) {
-    user.progress[type] = 0;
+  while (user.progress[type] >= 100) {
+    user.progress[type] -= 100;
     user.skillLevel[type] += 1;
-
-    alert("Subiste de nível! 🚀");
+    alert("Subiste de nível!");
   }
 
-  // histórico
   user.history.push({
     type: type,
     result: "success",
-    points: totalPoints,
+    points: stotalPoints,
     date: new Date().toISOString()
   });
 
-  // nível global
   user.level = Math.floor(user.points / 50) + 1;
 
-  // guardar local
   localStorage.setItem("user", JSON.stringify(user));
 
-  // 🌐 guardar no JSON Server
   await fetch(`http://localhost:3000/users/${user.id}`, {
     method: "PATCH",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(user)
   });
 
-  //feedback final
-  alert("Terminaste!\nPontos: " + totalPoints);
-
+  alert("Terminaste!\nPontos: " + stotalPoints);
 
   // opcional: redirecionar
-  // window.location.href = "dashboard.html";
+  window.location.href = "dashboard.html";
 }
+
+window.addEventListener("beforeunload", () => {
+
+  if (finished) return;
+
+  let user = JSON.parse(localStorage.getItem("user"));
+  if (!user) return;
+
+  const type = new URLSearchParams(window.location.search).get("type");
+
+  // penalizar XP total
+  user.points = Math.max(0, user.points - 10);
+
+  //penalizar progresso do exercício
+  if (user.progress && user.progress[type] !== undefined) {
+    user.progress[type] = Math.max(0, user.progress[type] - 10);
+  }
+
+  console.log("Penalização aplicada no tipo:", type);
+
+  localStorage.setItem("user", JSON.stringify(user));
+});
+
+window.addEventListener("beforeunload", () => {
+  console.log("SAIU DA PÁGINA");
+});

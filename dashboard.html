@@ -3,6 +3,7 @@
 
 <head>
     <title>Dashboard</title>
+    <link rel="icon" href="images/icon1024.png" type="image/x-icon">
     <link rel="stylesheet" href="css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -11,7 +12,10 @@
 
     <!-- NAVBAR -->
     <nav class="navbar bg-white p-3 mb-4">
-        <h4>Dashboard</h4>
+        <h4 class="d-flex align-items-center">
+            <img src="images/icon1024.png" alt="logo" width="30" class="me-2">
+            Dashboard
+        </h4>
         <div>
             <a href="dashboard.html" class="btn btn-outline-primary">Home</a>
             <a href="exercise.html" class="btn btn-primary">Exercícios</a>
@@ -26,22 +30,22 @@
         <span id="level" class="badge bg-success badge-level"></span>
 
         <p>A - Texto Embaralhado</p>
-        <div class="progress mb-2">
+        <div class="progress position-relative mb-2">
             <div id="progA" class="progress-bar bg-success"></div>
         </div>
 
         <p>B - Associar Imagem</p>
-        <div class="progress mb-2">
+        <div class="progress position-relative mb-2">
             <div id="progB" class="progress-bar bg-warning"></div>
         </div>
 
         <p>C - Quizz</p>
-        <div class="progress mb-2">
+        <div class="progress position-relative mb-2">
             <div id="progC" class="progress-bar bg-info"></div>
         </div>
 
         <p>D - Sopa de Letras</p>
-        <div class="progress mb-2">
+        <div class="progress position-relative mb-2">
             <div id="progD" class="progress-bar bg-info"></div>
         </div>
 

@@ -74,7 +74,7 @@ function showSection(section) {
         </div>
 
         <div class="col-md-4">
-          <input id="newImage" class="form-control mb-2" placeholder="URL imagem">
+          <input type="file" id="newImage" class="form-control mb-2" accept="image/*">
         </div>
 
         <div class="col-md-3">
@@ -86,7 +86,7 @@ function showSection(section) {
         </div>
 
         <div class="col-md-1">
-          <button class="btn btn-success w-100" onclick="addWord()">+</button>
+          <button type="button" class="btn btn-success w-100" onclick="addWord(event)">+</button>
         </div>
       </div>
 
@@ -273,6 +273,27 @@ function getSelectedWords() {
   return Array.from(select.selectedOptions).map(opt => opt.value);
 }
 
+//render palavra
+function renderWord(w) {
+  const container = document.getElementById("wordsList");
+
+  const div = document.createElement("div");
+  div.className = "card p-2 mb-2 d-flex justify-content-between align-items-center";
+
+  div.innerHTML = `
+    <div class="d-flex align-items-center gap-3">
+      <img src="${w.image}" width="40" height="40" style="object-fit:cover;">
+      <span>${w.word} (${w.difficulty})</span>
+    </div>
+
+    <button type="button" class="btn btn-danger btn-sm" onclick="deleteWord(event, this, '${w.id}')">
+      X
+    </button>
+  `;
+
+  container.appendChild(div);
+}
+
 //preselecionar select
 function loadWordsSelect(words, selectedIds = []) {
   const select = document.getElementById("wordsSelect");
@@ -305,7 +326,12 @@ async function deleteExercise(id) {
 //
 
 //adicionar palavra
-async function addWord() {
+async function addWord(event) {
+  
+  // prevenir comportamento default do form e propagação do clique
+  event.preventDefault();
+  event.stopPropagation();
+
   const word = document.getElementById("newWord").value.toUpperCase();
   const image = document.getElementById("newImage").value;
   const difficulty = document.getElementById("newDifficulty").value;
@@ -321,26 +347,47 @@ async function addWord() {
     difficulty
   };
 
-  await fetch("http://localhost:3000/words", {
+  const res = await fetch("http://localhost:3000/words", {
     method: "POST",
     body: JSON.stringify(newWord),
     headers: { "Content-Type": "application/json" }
   });
 
+  const savedWord = await res.json();
+
   // limpar campos (bónus UX)
   document.getElementById("newWord").value = "";
   document.getElementById("newImage").value = "";
 
-  loadWordsList();
+  //loadWordsList();
+  
+  renderWord(savedWord)
 }
 
 //apagar palavra
-async function deleteWord(id) {
-  await fetch(`http://localhost:3000/words/${id}`, {
-    method: "DELETE"
-  });
+async function deleteWord(event, btn, id) {
+  
+  event.preventDefault();
+  event.stopPropagation();
+  
+  // encontra o card
+  const card = btn.closest(".card");
 
-  loadWordsList();
+  //  efeito fade
+  card.style.transition = "0.2s";
+  card.style.opacity = "0";
+
+  // espera o fade terminar
+  setTimeout(async () => {
+
+    //apaga da BD
+    await fetch(`http://localhost:3000/words/${id}`, {
+      method: "DELETE"
+    });
+
+    // 🧹 remove do DOM
+    card.remove();
+  }, 200);
 }
 
 //load palavras
@@ -353,6 +400,7 @@ async function loadWords() {
 
 //load palavras para listagem
 async function loadWordsList() {
+  
   const res = await fetch("http://localhost:3000/words");
   const words = await res.json();
 
@@ -369,7 +417,7 @@ async function loadWordsList() {
         <span>${w.word} (${w.difficulty})</span>
       </div>
 
-      <button class="btn btn-danger btn-sm" onclick="deleteWord('${w.id}')">
+      <button class="btn btn-danger btn-sm" onclick="deleteWord(event, this, '${w.id}')">
         X
       </button>
     `;
@@ -403,6 +451,69 @@ async function loadStats() {
     Média pontos: <b>${avgPoints}</b><br>
     Top jogador: <b>${topUser.name || "N/A"}</b>
   `;
+}
+
+// upload imagem
+function handleImageUpload() {
+const fileInput = document.getElementById("imageFile");
+const file = fileInput.files[0];
+
+if (!file) {
+  //alert("Seleciona uma imagem");
+  return;
+}
+
+// validar tipo
+if (!["image/png", "image/jpeg"].includes(file.type)) {
+  alert("Só JPG ou PNG");
+  return;
+}
+
+// validar tamanho (250x250)
+const img = new Image();
+img.onload = async () => {
+
+  if (img.width > 250 || img.height > 250) {
+    alert("Max 250x250!");
+    return;
+  }
+
+  // 🔥 enviar para backend
+  const formData = new FormData();
+  formData.append("image", file);
+
+  const res = await fetch("http://localhost:3000/upload", {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await res.json();
+
+  const imagePath = data.path;
+
+  // 👉 agora guardas na BD
+  saveWord(imagePath);
+
+};
+
+img.src = URL.createObjectURL(file);
+}
+async function saveWord(imagePath) {
+
+  const word = document.getElementById("newWord").value;
+  const difficulty = document.getElementById("newDifficulty").value;
+
+  await fetch("http://localhost:3000/words", {
+    method: "POST",
+    body: JSON.stringify({
+      word,
+      difficulty,
+      image: imagePath
+    }),
+    headers: { "Content-Type": "application/json" }
+  });
+
+  alert("Palavra criada!");
 }
 
 function logout() {

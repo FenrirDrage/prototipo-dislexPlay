@@ -24,13 +24,13 @@
       "name": "Sérgio",
       "email": "smoreiralves@gmail.com",
       "password": "1234",
-      "points": 93,
-      "level": 2,
+      "points": 184,
+      "level": 4,
       "progress": {
-        "a": 25,
+        "a": 40,
         "b": 40,
         "c": 0,
-        "d": 8
+        "d": 84
       },
       "skillLevel": {
         "a": 1,
@@ -90,6 +90,78 @@
           "result": "success",
           "points": 10,
           "date": "2026-06-17T10:48:59.168Z"
+        },
+        {
+          "type": "b",
+          "result": "success",
+          "points": 0,
+          "date": "2026-06-17T19:26:04.696Z"
+        },
+        {
+          "type": "b",
+          "result": "fail",
+          "points": 0,
+          "date": "2026-06-17T19:26:09.632Z"
+        },
+        {
+          "type": "a",
+          "result": "success",
+          "points": 10,
+          "date": "2026-06-17T19:36:41.358Z"
+        },
+        {
+          "type": "a",
+          "result": "success",
+          "points": 5,
+          "date": "2026-06-17T19:36:52.757Z"
+        },
+        {
+          "type": "d",
+          "result": "success",
+          "points": 18,
+          "date": "2026-06-17T19:37:52.441Z"
+        },
+        {
+          "type": "b",
+          "result": "fail",
+          "points": 0,
+          "date": "2026-06-17T19:39:45.397Z"
+        },
+        {
+          "type": "d",
+          "result": "success",
+          "points": 26,
+          "date": "2026-06-17T19:45:07.401Z"
+        },
+        {
+          "type": "b",
+          "result": "fail",
+          "points": 0,
+          "date": "2026-06-17T19:46:53.888Z"
+        },
+        {
+          "type": "b",
+          "result": "success",
+          "points": 0,
+          "date": "2026-06-17T19:46:56.938Z"
+        },
+        {
+          "type": "b",
+          "result": "success",
+          "points": 0,
+          "date": "2026-06-17T19:46:59.452Z"
+        },
+        {
+          "type": "d",
+          "result": "success",
+          "points": 16,
+          "date": "2026-06-17T19:55:56.543Z"
+        },
+        {
+          "type": "d",
+          "result": "success",
+          "points": 16,
+          "date": "2026-06-17T20:57:46.714Z"
         }
       ],
       "id": "ny_G3niXoy4"
@@ -118,14 +190,11 @@
       ]
     },
     {
-      "id": "HKEMK5MTol8",
-      "type": "image",
       "title": "Associar Imagem",
-      "difficulty": "easy",
-      "wordIds": [
-        "1",
-        "2"
-      ]
+      "type": "image",
+      "difficulty": "medium",
+      "wordIds": [],
+      "id": "HKEMK5MTol8"
     },
     {
       "id": "ZuSleNu-LBQ",

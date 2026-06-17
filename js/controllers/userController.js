@@ -34,6 +34,12 @@ document.addEventListener("DOMContentLoaded", () => {
     progC.innerText = user.progress.c + " XP";
   }
 
+  const progD = document.getElementById("progD");
+  if (progD) {
+    progD.style.width = user.progress.d + " XP";
+    progD.innerText = user.progress.d + " XP";
+  }
+
   //recomendação
   let minType = "a";
   let minValue = user.progress.a;
